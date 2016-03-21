@@ -52,9 +52,13 @@ JPEGDecoder.probe = function(buf) {
 };
 
 JPEGDecoder.prototype._transform = function(data, encoding, done) {
-  var buf = data instanceof Uint8Array ? data : new Uint8Array(data);
-  this.decoder.decode(buf);
-  done();
+  try {
+    var buf = data instanceof Uint8Array ? data : new Uint8Array(data);
+    this.decoder.decode(buf);
+    done();
+  } catch (error) {
+    this.emit('error', new Error(error));
+  }
 };
 
 JPEGDecoder.prototype._flush = function(done) {
